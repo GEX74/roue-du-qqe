@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<!-- saved from url=(0095)file:///C:/Users/GEXERTIER/OneDrive%20-%20FOURNIER%20SAS/Bureau/Nouveau%20Document%20texte.html -->
-<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La roue du QQE</title>
   <style>
     :root {
-      --primary: #2563eb;
+      --primary: #3b82f6;
       --primary-dark: #1d4ed8;
-      --bg: #0f172a;
-      --card-bg: #1e293b;
+      --bg: #090d16;
+      --card-bg: rgba(30, 41, 59, 0.7);
       --text: #f8fafc;
       --text-muted: #94a3b8;
-      --border: #334155;
-      --accent: #f59e0b;
+      --border: rgba(255, 255, 255, 0.1);
+      --gold: #fbbf24;
+      --gold-dark: #d97706;
     }
 
     * {
@@ -24,35 +25,39 @@
     }
 
     body {
-      background: radial-gradient(circle at top, #1e293b 0%, var(--bg) 100%);
+      background: radial-gradient(circle at 50% 10%, #1e293b 0%, var(--bg) 100%);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 24px 16px;
+      overflow-x: hidden;
     }
 
     header {
       text-align: center;
       margin-bottom: 24px;
+      user-select: none;
     }
 
     h1 {
-      font-size: 2.4rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #60a5fa, #f59e0b);
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, #60a5fa 0%, #fbbf24 50%, #f59e0b 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-transform: uppercase;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      filter: drop-shadow(0 4px 15px rgba(245, 158, 11, 0.3));
+      cursor: default;
     }
 
     p.subtitle {
       color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-top: 4px;
+      font-size: 1rem;
+      margin-top: 6px;
+      letter-spacing: 0.5px;
     }
 
     .main-layout {
@@ -60,21 +65,21 @@
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;
-      align-items: flex-start;
-      gap: 36px;
-      max-width: 1100px;
+      align-items: center;
+      gap: 48px;
+      max-width: 1200px;
       width: 100%;
     }
 
-    /* Section Roue */
-    .wheel-container {
+    /* Conteneur de la roue */
+    .wheel-wrapper {
       position: relative;
-      width: 440px;
-      height: 440px;
+      width: 520px;
+      height: 520px;
       display: flex;
       align-items: center;
       justify-content: center;
-      filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.6));
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.7));
     }
 
     canvas#wheelCanvas {
@@ -83,58 +88,70 @@
       border-radius: 50%;
     }
 
-    /* Flèche pointeur */
-    .pointer {
+    /* Flèche pointeur stylisée */
+    .pointer-container {
       position: absolute;
-      top: -12px;
+      top: -14px;
       left: 50%;
       transform: translateX(-50%);
-      width: 32px;
-      height: 44px;
-      background: linear-gradient(to bottom, #ef4444, #b91c1c);
-      clip-path: polygon(50% 100%, 0 0, 100% 0);
-      z-index: 10;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
-      transition: transform 0.08s ease-out;
-      transform-origin: 50% 0%;
+      z-index: 20;
+      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.6));
+    }
+
+    .pointer {
+      width: 36px;
+      height: 48px;
+      background: linear-gradient(180deg, #ef4444 0%, #991b1b 100%);
+      clip-path: polygon(50% 100%, 0% 15%, 15% 0%, 85% 0%, 100% 15%);
+      border-radius: 4px;
+      transform-origin: 50% 10%;
+      transition: transform 0.07s ease-out;
     }
 
     .pointer.tick {
-      transform: translateX(-50%) rotate(-14deg);
+      transform: rotate(-18deg);
     }
 
     /* Bouton central */
     .center-button {
       position: absolute;
-      width: 90px;
-      height: 90px;
-      background: radial-gradient(circle, #3b82f6, #1d4ed8);
-      border: 4px solid #ffffff;
+      width: 104px;
+      height: 104px;
+      background: radial-gradient(circle at 35% 35%, #38bdf8 0%, #1d4ed8 70%, #0f172a 100%);
+      border: 5px solid #ffffff;
       border-radius: 50%;
-      color: #fff;
-      font-weight: 800;
-      font-size: 1.05rem;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 1.15rem;
+      letter-spacing: 1px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      box-shadow: 
+        0 0 0 4px var(--gold),
+        0 10px 25px rgba(0,0,0,0.6),
+        inset 0 -4px 8px rgba(0,0,0,0.4);
       user-select: none;
-      transition: transform 0.15s, box-shadow 0.15s;
-      z-index: 5;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+      z-index: 10;
     }
 
     .center-button:hover:not(:disabled) {
-      transform: scale(1.06);
-      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+      transform: scale(1.08);
+      box-shadow: 
+        0 0 0 6px var(--gold),
+        0 0 30px rgba(59, 130, 246, 0.7),
+        0 10px 25px rgba(0,0,0,0.6);
     }
 
     .center-button:active:not(:disabled) {
-      transform: scale(0.96);
+      transform: scale(0.95);
     }
 
     .center-button:disabled {
-      background: #64748b;
+      background: #475569;
+      box-shadow: 0 0 0 3px #64748b;
       cursor: not-allowed;
       opacity: 0.8;
     }
@@ -143,28 +160,31 @@
     .panel {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 20px;
       padding: 24px;
       width: 360px;
       display: flex;
       flex-direction: column;
       gap: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      backdrop-filter: blur(12px);
     }
 
     .panel h2 {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
     }
 
     .badge {
       font-size: 0.8rem;
-      background: var(--primary);
-      padding: 3px 9px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      padding: 4px 10px;
       border-radius: 12px;
-      font-weight: normal;
+      font-weight: 600;
+      color: #fff;
     }
 
     label {
@@ -174,57 +194,62 @@
 
     textarea {
       width: 100%;
-      height: 190px;
-      background: #0f172a;
+      height: 200px;
+      background: rgba(15, 23, 42, 0.8);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
+      border-radius: 12px;
+      padding: 14px;
       color: var(--text);
-      font-size: 0.95rem;
-      line-height: 1.5;
+      font-size: 1rem;
+      line-height: 1.6;
       resize: vertical;
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
     }
 
     textarea:focus {
       border-color: var(--primary);
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
     }
 
     .btn-row {
       display: flex;
-      gap: 8px;
+      gap: 10px;
     }
 
     button.btn {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
       border: none;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-weight: 600;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-weight: 700;
+      font-size: 0.95rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s;
       flex: 1;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
 
     button.btn:hover:not(:disabled) {
-      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
     }
 
     button.btn-secondary {
-      background: #334155;
+      background: rgba(51, 65, 85, 0.8);
+      box-shadow: none;
     }
 
     button.btn-secondary:hover:not(:disabled) {
       background: #475569;
     }
 
-    /* Modal Gagnant */
+    /* Pop-up Résultat */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -232,7 +257,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(6px);
     }
 
     .modal-backdrop.open {
@@ -241,16 +266,16 @@
     }
 
     .modal {
-      background: var(--card-bg);
-      border: 2px solid var(--accent);
-      border-radius: 20px;
-      padding: 32px;
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      border: 3px solid var(--gold);
+      border-radius: 24px;
+      padding: 36px 32px;
       width: 90%;
-      max-width: 400px;
+      max-width: 440px;
       text-align: center;
-      transform: scale(0.9);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      transform: scale(0.85);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 35px rgba(251, 191, 36, 0.3);
     }
 
     .modal-backdrop.open .modal {
@@ -260,17 +285,64 @@
     .modal h3 {
       font-size: 1.1rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 12px;
+      font-weight: 800;
     }
 
     .modal .winner-name {
-      font-size: 2.2rem;
+      font-size: 2.7rem;
       font-weight: 900;
-      color: var(--accent);
-      margin: 12px 0 24px;
+      color: #ffffff;
+      margin: 12px 0 8px;
       word-break: break-word;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .modal .funny-phrase {
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 28px;
+    }
+
+    /* Panneau Secret (Mode discret) */
+    .secret-box {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #111827;
+      border: 1px dashed #ef4444;
+      border-radius: 12px;
+      padding: 14px 18px;
+      z-index: 200;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      font-size: 0.85rem;
+    }
+
+    .secret-box.active {
+      display: block;
+    }
+
+    .secret-box label {
+      color: #f87171;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .secret-box select {
+      background: #1f2937;
+      color: white;
+      border: 1px solid #374151;
+      padding: 8px 10px;
+      border-radius: 6px;
+      outline: none;
+      width: 100%;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
     }
 
     canvas#confettiCanvas {
@@ -284,26 +356,28 @@
 <body>
 
   <header>
-    <h1>La roue du QQE</h1>
-    <p class="subtitle">Tournez la roue pour désigner aléatoirement une personne</p>
+    <h1 id="secretTitleTrigger">La roue du QQE</h1>
+    <p class="subtitle">Qui sera l'heureux(se) élu(e) ?</p>
   </header>
 
   <div class="main-layout">
     <!-- Zone Roue -->
-    <div class="wheel-container">
-      <div class="pointer" id="pointer"></div>
-      <canvas id="wheelCanvas" width="800" height="800"></canvas>
-      <button class="center-button" id="spinBtn">LANCER</button>
+    <div class="wheel-wrapper">
+      <div class="pointer-container">
+        <div class="pointer" id="pointer"></div>
+      </div>
+      <canvas id="wheelCanvas" width="900" height="900"></canvas>
+      <button class="center-button" id="spinBtn">TOURNER</button>
     </div>
 
-    <!-- Zone Configuration -->
+    <!-- Configuration -->
     <div class="panel">
       <h2>
         Participants
-        <span class="badge" id="namesCount">6 noms</span>
+        <span class="badge" id="namesCount">0</span>
       </h2>
       <label for="namesInput">Un nom par ligne :</label>
-      <textarea id="namesInput" spellcheck="false" placeholder="Entrez un nom par ligne..."></textarea>
+      <textarea id="namesInput" spellcheck="false"></textarea>
       <div class="btn-row">
         <button class="btn btn-secondary" id="shuffleBtn">Mélanger</button>
         <button class="btn" id="updateBtn">Appliquer</button>
@@ -311,32 +385,47 @@
     </div>
   </div>
 
-  <!-- Modal Résultat -->
+  <!-- Pop-up Résultat -->
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal">
       <h3>Désigné(e) par le QQE !</h3>
       <div class="winner-name" id="winnerName">---</div>
+      <div class="funny-phrase" id="funnyPhrase">...</div>
       <button class="btn" id="closeModalBtn" style="width: 100%;">Fermer</button>
     </div>
   </div>
 
-  <canvas id="confettiCanvas" width="1912" height="914"></canvas>
+  <!-- Mode Secret -->
+  <div class="secret-box" id="secretBox">
+    <label>🤫 Mode discret QQE :</label>
+    <select id="riggedTargetSelect">
+      <option value="">-- Tirage normal (Aléatoire) --</option>
+    </select>
+    <button class="btn btn-secondary" style="padding: 6px; font-size: 0.75rem; width: 100%;" id="closeSecretBtn">Masquer (ou Échap)</button>
+  </div>
+
+  <canvas id="confettiCanvas"></canvas>
 
   <script>
+    // Couleurs vives et contrastées
     const COLORS = [
-      '#ef4444', '#f97316', '#f59e0b', '#10b981',
-      '#06b6d4', '#3b82f6', '#6366f1', '#8b5cf6',
-      '#ec4899', '#14b8a6', '#84cc16', '#eab308'
+      '#e11d48', '#ea580c', '#d97706', '#059669',
+      '#0891b2', '#2563eb', '#7c3aed', '#c026d3',
+      '#0d9488', '#4f46e5', '#db2777', '#65a30d'
     ];
 
-    let names = [
-      "Audrey",
-      "Raphaël",
-      "Pascal",
-      "Nicolas",
-      "Valentin",
-      "Julien"      
+    const FUNNY_QUOTES = [
+      "Le hasard fait décidément bien les choses ! 😉",
+      "Promis juré, la roue n'est absolument pas truquée 😇",
+      "Désigné(e) volontaire d'office !",
+      "C'est toi qui régales les croissants la prochaine fois ?",
+      "Aucune réclamation ne sera acceptée par l'administration.",
+      "Le destin a parlé sans hésiter.",
+      "On applaudit bien fort notre vedette !",
+      "La décision de la Roue du QQE est irrévocable."
     ];
+
+    let names = ["Audrey", "Pascal", "Nicolas", "Julien", "Valentin", "Raphaël"];
 
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
@@ -348,25 +437,31 @@
     const shuffleBtn = document.getElementById('shuffleBtn');
     const modalBackdrop = document.getElementById('modalBackdrop');
     const winnerNameEl = document.getElementById('winnerName');
+    const funnyPhraseEl = document.getElementById('funnyPhrase');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const confettiCanvas = document.getElementById('confettiCanvas');
     const confettiCtx = confettiCanvas.getContext('2d');
 
+    const secretBox = document.getElementById('secretBox');
+    const riggedTargetSelect = document.getElementById('riggedTargetSelect');
+    const closeSecretBtn = document.getElementById('closeSecretBtn');
+    const secretTitleTrigger = document.getElementById('secretTitleTrigger');
+
     let currentAngle = 0;
     let isSpinning = false;
     let lastTickIndex = -1;
+    let riggedTarget = "";
 
-    // Web Audio API
+    // Sons synthétisés
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
     function playTick() {
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(450, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.04);
-      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(480, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(90, audioCtx.currentTime + 0.04);
+      gain.gain.setValueAtTime(0.22, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
       osc.connect(gain);
       gain.connect(audioCtx.destination);
@@ -385,18 +480,19 @@
         const gain = audioCtx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.12);
-        gain.gain.setValueAtTime(0.25, audioCtx.currentTime + idx * 0.12);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.12 + 0.5);
+        gain.gain.setValueAtTime(0.28, audioCtx.currentTime + idx * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.12 + 0.55);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start(audioCtx.currentTime + idx * 0.12);
-        osc.stop(audioCtx.currentTime + idx * 0.12 + 0.55);
+        osc.stop(audioCtx.currentTime + idx * 0.12 + 0.6);
       });
     }
 
     function init() {
       namesInput.value = names.join('\n');
       updateCount();
+      updateSecretDropdown();
       drawWheel();
       resizeConfetti();
       window.addEventListener('resize', resizeConfetti);
@@ -406,27 +502,44 @@
       namesCount.textContent = `${names.length} nom${names.length > 1 ? 's' : ''}`;
     }
 
+    function updateSecretDropdown() {
+      const current = riggedTargetSelect.value;
+      riggedTargetSelect.innerHTML = '<option value="">-- Tirage normal (Aléatoire) --</option>';
+      names.forEach(n => {
+        const opt = document.createElement('option');
+        opt.value = n;
+        opt.textContent = `🎯 Forcer : ${n}`;
+        riggedTargetSelect.appendChild(opt);
+      });
+      riggedTargetSelect.value = names.includes(current) ? current : "";
+      riggedTarget = riggedTargetSelect.value;
+    }
+
+    // Dessin de la Roue
     function drawWheel() {
       const size = canvas.width;
       const center = size / 2;
-      const radius = center - 16;
+      const outerBorderWidth = 26;
+      const radius = center - outerBorderWidth - 6;
+
       ctx.clearRect(0, 0, size, size);
 
       if (names.length === 0) {
         ctx.beginPath();
         ctx.arc(center, center, radius, 0, 2 * Math.PI);
-        ctx.fillStyle = '#334155';
+        ctx.fillStyle = '#1e293b';
         ctx.fill();
         ctx.fillStyle = '#94a3b8';
-        ctx.font = 'bold 28px sans-serif';
+        ctx.font = 'bold 32px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('Ajoutez des noms', center, center);
+        ctx.fillText('Ajoutez des participants', center, center);
         return;
       }
 
       const arc = (2 * Math.PI) / names.length;
 
+      // 1. Dessin des parts et des noms
       ctx.save();
       ctx.translate(center, center);
       ctx.rotate(currentAngle);
@@ -435,51 +548,119 @@
         const angle = i * arc;
         const color = COLORS[i % COLORS.length];
 
+        // Part
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.arc(0, 0, radius, angle, angle + arc);
         ctx.fillStyle = color;
         ctx.fill();
 
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-        ctx.lineWidth = 2;
+        // Séparateur fin blanc
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.lineWidth = 3;
         ctx.stroke();
 
+        // Dessin du texte (grand et lisible)
         ctx.save();
         ctx.rotate(angle + arc / 2);
         ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+
+        // Calcul dynamique de la taille de police pour maximiser la lisibilité
+        let fontSize = 34;
+        if (names.length > 8) fontSize = 28;
+        if (names.length > 14) fontSize = 22;
+        if (names.length > 20) fontSize = 18;
+
+        ctx.font = `900 ${fontSize}px "Impact", "Arial Black", system-ui, sans-serif`;
+
+        // Contour noir du texte (pour un détachement maximal)
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = '#000000';
+        ctx.lineJoin = 'round';
+        ctx.miterLimit = 2;
+        ctx.strokeText(name, radius - 24, 0);
+
+        // Intérieur du texte blanc éclatant
         ctx.fillStyle = '#ffffff';
-        ctx.font = names.length > 20 ? 'bold 18px sans-serif' : 'bold 24px sans-serif';
-        ctx.shadowColor = 'rgba(0,0,0,0.6)';
-        ctx.shadowBlur = 4;
-        
-        let displayName = name;
-        if (displayName.length > 18) displayName = displayName.substring(0, 16) + '...';
-        ctx.fillText(displayName, radius - 30, 8);
+        ctx.fillText(name, radius - 24, 0);
+
         ctx.restore();
       });
 
+      ctx.restore();
+
+      // 2. Bordure extérieure "Show TV" dorée avec ampoules
+      ctx.save();
+      ctx.translate(center, center);
+
+      // Anneau doré extérieur
+      ctx.beginPath();
+      ctx.arc(0, 0, radius + outerBorderWidth / 2, 0, 2 * Math.PI);
+      ctx.lineWidth = outerBorderWidth;
+      const grad = ctx.createLinearGradient(-radius, -radius, radius, radius);
+      grad.addColorStop(0, '#f59e0b');
+      grad.addColorStop(0.5, '#fde68a');
+      grad.addColorStop(1, '#b45309');
+      ctx.strokeStyle = grad;
+      ctx.stroke();
+
+      // Filet intérieur sombre
       ctx.beginPath();
       ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-      ctx.lineWidth = 10;
-      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#78350f';
       ctx.stroke();
+
+      // Ampoules lumineuses
+      const numLights = Math.max(names.length * 2, 24);
+      for (let i = 0; i < numLights; i++) {
+        const lightAngle = (i * 2 * Math.PI) / numLights;
+        const lx = Math.cos(lightAngle) * (radius + outerBorderWidth / 2);
+        const ly = Math.sin(lightAngle) * (radius + outerBorderWidth / 2);
+
+        ctx.beginPath();
+        ctx.arc(lx, ly, 4.5, 0, 2 * Math.PI);
+        ctx.fillStyle = (i % 2 === 0) ? '#ffffff' : '#fef08a';
+        ctx.shadowColor = '#ffffff';
+        ctx.shadowBlur = 6;
+        ctx.fill();
+        ctx.shadowBlur = 0; // reset
+      }
 
       ctx.restore();
     }
 
+    // Animation & Décélération
     function spin() {
       if (isSpinning || names.length === 0) return;
       isSpinning = true;
       spinBtn.disabled = true;
 
-      const minRotations = 5;
-      const extraRotations = Math.random() * 4;
-      const totalExtraAngle = (minRotations + extraRotations) * 2 * Math.PI + Math.random() * 2 * Math.PI;
+      const sliceAngle = (2 * Math.PI) / names.length;
+      let targetIndex;
+
+      if (riggedTarget && names.includes(riggedTarget)) {
+        targetIndex = names.indexOf(riggedTarget);
+      } else {
+        targetIndex = Math.floor(Math.random() * names.length);
+      }
+
+      // Nombre de tours (6 à 8 tours)
+      const minFullRotations = 6 + Math.floor(Math.random() * 3);
+      const currentNorm = currentAngle % (2 * Math.PI);
       
+      // Calage sous le pointeur au sommet (3*PI/2) avec léger aléatoire
+      const randomOffset = (Math.random() - 0.5) * (sliceAngle * 0.5);
+      let targetFinalAngle = (3 * Math.PI / 2) - (targetIndex * sliceAngle + sliceAngle / 2) + randomOffset;
+      
+      while (targetFinalAngle <= currentNorm) {
+        targetFinalAngle += 2 * Math.PI;
+      }
+      const totalTargetAngle = currentAngle + (targetFinalAngle - currentNorm) + (minFullRotations * 2 * Math.PI);
+
       const startAngle = currentAngle;
-      const targetAngle = startAngle + totalExtraAngle;
-      const duration = 5000 + Math.random() * 1500;
+      const duration = 5200 + Math.random() * 1000;
       const startTime = performance.now();
 
       function easeOutCubic(t) {
@@ -491,9 +672,8 @@
         const progress = Math.min(elapsed / duration, 1);
         const easedProgress = easeOutCubic(progress);
 
-        currentAngle = startAngle + (targetAngle - startAngle) * easedProgress;
+        currentAngle = startAngle + (totalTargetAngle - startAngle) * easedProgress;
 
-        const sliceAngle = (2 * Math.PI) / names.length;
         const normalizedAngle = (2 * Math.PI - (currentAngle % (2 * Math.PI)) + (3 * Math.PI / 2)) % (2 * Math.PI);
         const currentSliceIndex = Math.floor(normalizedAngle / sliceAngle);
 
@@ -509,21 +689,17 @@
         } else {
           isSpinning = false;
           spinBtn.disabled = false;
-          determineWinner();
+          showWinner(targetIndex);
         }
       }
 
       requestAnimationFrame(animate);
     }
 
-    function determineWinner() {
-      const sliceAngle = (2 * Math.PI) / names.length;
-      const normalizedAngle = (2 * Math.PI - (currentAngle % (2 * Math.PI)) + (3 * Math.PI / 2)) % (2 * Math.PI);
-      const winnerIndex = Math.floor(normalizedAngle / sliceAngle) % names.length;
-      
-      winnerNameEl.textContent = names[winnerIndex];
+    function showWinner(index) {
+      winnerNameEl.textContent = names[index];
+      funnyPhraseEl.textContent = FUNNY_QUOTES[Math.floor(Math.random() * FUNNY_QUOTES.length)];
       modalBackdrop.classList.add('open');
-
       playFanfare();
       launchConfetti();
     }
@@ -539,18 +715,18 @@
 
     function launchConfetti() {
       confettiParticles = [];
-      for (let i = 0; i < 120; i++) {
+      for (let i = 0; i < 140; i++) {
         confettiParticles.push({
           x: window.innerWidth / 2,
           y: window.innerHeight / 2,
-          w: Math.random() * 10 + 6,
+          w: Math.random() * 12 + 6,
           h: Math.random() * 6 + 4,
           color: COLORS[Math.floor(Math.random() * COLORS.length)],
-          vx: (Math.random() - 0.5) * 18,
-          vy: (Math.random() - 0.7) * 18,
+          vx: (Math.random() - 0.5) * 20,
+          vy: (Math.random() - 0.7) * 20,
           gravity: 0.35,
           rotation: Math.random() * 360,
-          vRotation: (Math.random() - 0.5) * 10,
+          vRotation: (Math.random() - 0.5) * 12,
           opacity: 1
         });
       }
@@ -595,6 +771,7 @@
       const raw = namesInput.value.split('\n');
       names = raw.map(n => n.trim()).filter(n => n.length > 0);
       updateCount();
+      updateSecretDropdown();
       drawWheel();
     }
 
@@ -605,8 +782,45 @@
         [names[i], names[j]] = [names[j], names[i]];
       }
       namesInput.value = names.join('\n');
+      updateSecretDropdown();
       drawWheel();
     }
+
+    // Raccourci secret : mot-clé "qqe"
+    let secretKeys = "";
+    window.addEventListener('keydown', (e) => {
+      if (e.key === "Escape") {
+        secretBox.classList.remove('active');
+        return;
+      }
+      if (e.target === namesInput) return;
+
+      secretKeys += e.key.toLowerCase();
+      if (secretKeys.length > 5) secretKeys = secretKeys.slice(-5);
+      if (secretKeys.endsWith("qqe")) {
+        secretBox.classList.toggle('active');
+        secretKeys = "";
+      }
+    });
+
+    // Triple clic sur le titre
+    let titleClicks = 0;
+    let titleTimer = null;
+    secretTitleTrigger.addEventListener('click', () => {
+      titleClicks++;
+      clearTimeout(titleTimer);
+      if (titleClicks >= 3) {
+        secretBox.classList.toggle('active');
+        titleClicks = 0;
+      } else {
+        titleTimer = setTimeout(() => { titleClicks = 0; }, 400);
+      }
+    });
+
+    closeSecretBtn.addEventListener('click', () => secretBox.classList.remove('active'));
+    riggedTargetSelect.addEventListener('change', (e) => {
+      riggedTarget = e.target.value;
+    });
 
     // Événements
     spinBtn.addEventListener('click', spin);
@@ -616,5 +830,5 @@
 
     init();
   </script>
-
-</body></html>
+</body>
+</html>
