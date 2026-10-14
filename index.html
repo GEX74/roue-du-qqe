@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<!-- saved from url=(0095)file:///C:/Users/GEXERTIER/OneDrive%20-%20FOURNIER%20SAS/Bureau/Nouveau%20Document%20texte.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La roue du QQE</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --accent: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1e293b 0%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #60a5fa, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    .main-layout {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 36px;
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    /* Section Roue */
+    .wheel-container {
+      position: relative;
+      width: 440px;
+      height: 440px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.6));
+    }
+
+    canvas#wheelCanvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+
+    /* Flèche pointeur */
+    .pointer {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 32px;
+      height: 44px;
+      background: linear-gradient(to bottom, #ef4444, #b91c1c);
+      clip-path: polygon(50% 100%, 0 0, 100% 0);
+      z-index: 10;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+      transition: transform 0.08s ease-out;
+      transform-origin: 50% 0%;
+    }
+
+    .pointer.tick {
+      transform: translateX(-50%) rotate(-14deg);
+    }
+
+    /* Bouton central */
+    .center-button {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      background: radial-gradient(circle, #3b82f6, #1d4ed8);
+      border: 4px solid #ffffff;
+      border-radius: 50%;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.05rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      user-select: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      z-index: 5;
+    }
+
+    .center-button:hover:not(:disabled) {
+      transform: scale(1.06);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+    }
+
+    .center-button:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+
+    .center-button:disabled {
+      background: #64748b;
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+
+    /* Panneau de configuration */
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .panel h2 {
+      font-size: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge {
+      font-size: 0.8rem;
+      background: var(--primary);
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-weight: normal;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    textarea {
+      width: 100%;
+      height: 190px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--text);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    button.btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex: 1;
+    }
+
+    button.btn:hover:not(:disabled) {
+      background: var(--primary-dark);
+    }
+
+    button.btn-secondary {
+      background: #334155;
+    }
+
+    button.btn-secondary:hover:not(:disabled) {
+      background: #475569;
+    }
+
+    /* Modal Gagnant */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: var(--card-bg);
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      padding: 32px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+
+    .modal-backdrop.open .modal {
+      transform: scale(1);
+    }
+
+    .modal h3 {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .modal .winner-name {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--accent);
+      margin: 12px 0 24px;
+      word-break: break-word;
+    }
+
+    canvas#confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>La roue du QQE</h1>
+    <p class="subtitle">Tournez la roue pour désigner aléatoirement une personne</p>
+  </header>
+
+  <div class="main-layout">
+    <!-- Zone Roue -->
+    <div class="wheel-container">
+      <div class="pointer" id="pointer"></div>
+      <canvas id="wheelCanvas" width="800" height="800"></canvas>
+      <button class="center-button" id="spinBtn">LANCER</button>
+    </div>
+
+    <!-- Zone Configuration -->
+    <div class="panel">
+      <h2>
+        Participants
+        <span class="badge" id="namesCount">6 noms</span>
+      </h2>
+      <label for="namesInput">Un nom par ligne :</label>
+      <textarea id="namesInput" spellcheck="false" placeholder="Entrez un nom par ligne..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="shuffleBtn">Mélanger</button>
+        <button class="btn" id="updateBtn">Appliquer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Résultat -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <h3>Désigné(e) par le QQE !</h3>
+      <div class="winner-name" id="winnerName">---</div>
+      <button class="btn" id="closeModalBtn" style="width: 100%;">Fermer</button>
+    </div>
+  </div>
+
+  <canvas id="confettiCanvas" width="1912" height="914"></canvas>
+
+  <script>
+    const COLORS = [
+      '#ef4444', '#f97316', '#f59e0b', '#10b981',
+      '#06b6d4', '#3b82f6', '#6366f1', '#8b5cf6',
+      '#ec4899', '#14b8a6', '#84cc16', '#eab308'
+    ];
+
+    let names = [
+      "Audrey",
+      "Raphaël",
+      "Pascal",
+      "Nicolas",
+      "Valentin",
+      "Julien"      
+    ];
+
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const spinBtn = document.getElementById('spinBtn');
+    const pointer = document.getElementById('pointer');
+    const namesInput = document.getElementById('namesInput');
+    const namesCount = document.getElementById('namesCount');
+    const updateBtn = document.getElementById('updateBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const winnerNameEl = document.getElementById('winnerName');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    const confettiCtx = confettiCanvas.getContext('2d');
+
+    let currentAngle = 0;
+    let isSpinning = false;
+    let lastTickIndex = -1;
+
+    // Web Audio API
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playTick() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.04);
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.04);
+
+      pointer.classList.add('tick');
+      setTimeout(() => pointer.classList.remove('tick'), 70);
+    }
+
+    function playFanfare() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const notes = [261.63, 329.63, 392.00, 523.25];
+      notes.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.12);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime + idx * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.12 + 0.5);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + idx * 0.12);
+        osc.stop(audioCtx.currentTime + idx * 0.12 + 0.55);
+      });
+    }
+
+    function init() {
+      namesInput.value = names.join('\n');
+      updateCount();
+      drawWheel();
+      resizeConfetti();
+      window.addEventListener('resize', resizeConfetti);
+    }
+
+    function updateCount() {
+      namesCount.textContent = `${names.length} nom${names.length > 1 ? 's' : ''}`;
+    }
+
+    function drawWheel() {
+      const size = canvas.width;
+      const center = size / 2;
+      const radius = center - 16;
+      ctx.clearRect(0, 0, size, size);
+
+      if (names.length === 0) {
+        ctx.beginPath();
+        ctx.arc(center, center, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = '#334155';
+        ctx.fill();
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = 'bold 28px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Ajoutez des noms', center, center);
+        return;
+      }
+
+      const arc = (2 * Math.PI) / names.length;
+
+      ctx.save();
+      ctx.translate(center, center);
+      ctx.rotate(currentAngle);
+
+      names.forEach((name, i) => {
+        const angle = i * arc;
+        const color = COLORS[i % COLORS.length];
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, radius, angle, angle + arc);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.save();
+        ctx.rotate(angle + arc / 2);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = names.length > 20 ? 'bold 18px sans-serif' : 'bold 24px sans-serif';
+        ctx.shadowColor = 'rgba(0,0,0,0.6)';
+        ctx.shadowBlur = 4;
+        
+        let displayName = name;
+        if (displayName.length > 18) displayName = displayName.substring(0, 16) + '...';
+        ctx.fillText(displayName, radius - 30, 8);
+        ctx.restore();
+      });
+
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+      ctx.lineWidth = 10;
+      ctx.strokeStyle = '#f59e0b';
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function spin() {
+      if (isSpinning || names.length === 0) return;
+      isSpinning = true;
+      spinBtn.disabled = true;
+
+      const minRotations = 5;
+      const extraRotations = Math.random() * 4;
+      const totalExtraAngle = (minRotations + extraRotations) * 2 * Math.PI + Math.random() * 2 * Math.PI;
+      
+      const startAngle = currentAngle;
+      const targetAngle = startAngle + totalExtraAngle;
+      const duration = 5000 + Math.random() * 1500;
+      const startTime = performance.now();
+
+      function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+      }
+
+      function animate(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easedProgress = easeOutCubic(progress);
+
+        currentAngle = startAngle + (targetAngle - startAngle) * easedProgress;
+
+        const sliceAngle = (2 * Math.PI) / names.length;
+        const normalizedAngle = (2 * Math.PI - (currentAngle % (2 * Math.PI)) + (3 * Math.PI / 2)) % (2 * Math.PI);
+        const currentSliceIndex = Math.floor(normalizedAngle / sliceAngle);
+
+        if (currentSliceIndex !== lastTickIndex) {
+          playTick();
+          lastTickIndex = currentSliceIndex;
+        }
+
+        drawWheel();
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          isSpinning = false;
+          spinBtn.disabled = false;
+          determineWinner();
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    function determineWinner() {
+      const sliceAngle = (2 * Math.PI) / names.length;
+      const normalizedAngle = (2 * Math.PI - (currentAngle % (2 * Math.PI)) + (3 * Math.PI / 2)) % (2 * Math.PI);
+      const winnerIndex = Math.floor(normalizedAngle / sliceAngle) % names.length;
+      
+      winnerNameEl.textContent = names[winnerIndex];
+      modalBackdrop.classList.add('open');
+
+      playFanfare();
+      launchConfetti();
+    }
+
+    // Confettis
+    let confettiParticles = [];
+    let confettiAnimationId = null;
+
+    function resizeConfetti() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+
+    function launchConfetti() {
+      confettiParticles = [];
+      for (let i = 0; i < 120; i++) {
+        confettiParticles.push({
+          x: window.innerWidth / 2,
+          y: window.innerHeight / 2,
+          w: Math.random() * 10 + 6,
+          h: Math.random() * 6 + 4,
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          vx: (Math.random() - 0.5) * 18,
+          vy: (Math.random() - 0.7) * 18,
+          gravity: 0.35,
+          rotation: Math.random() * 360,
+          vRotation: (Math.random() - 0.5) * 10,
+          opacity: 1
+        });
+      }
+
+      if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
+      animateConfetti();
+    }
+
+    function animateConfetti() {
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      let alive = false;
+
+      confettiParticles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.gravity;
+        p.vx *= 0.98;
+        p.rotation += p.vRotation;
+        p.opacity -= 0.007;
+
+        if (p.opacity > 0) {
+          alive = true;
+          confettiCtx.save();
+          confettiCtx.translate(p.x, p.y);
+          confettiCtx.rotate((p.rotation * Math.PI) / 180);
+          confettiCtx.fillStyle = p.color;
+          confettiCtx.globalAlpha = Math.max(0, p.opacity);
+          confettiCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          confettiCtx.restore();
+        }
+      });
+
+      if (alive) {
+        confettiAnimationId = requestAnimationFrame(animateConfetti);
+      } else {
+        confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      }
+    }
+
+    function updateNamesFromInput() {
+      if (isSpinning) return;
+      const raw = namesInput.value.split('\n');
+      names = raw.map(n => n.trim()).filter(n => n.length > 0);
+      updateCount();
+      drawWheel();
+    }
+
+    function shuffleNames() {
+      if (isSpinning) return;
+      for (let i = names.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [names[i], names[j]] = [names[j], names[i]];
+      }
+      namesInput.value = names.join('\n');
+      drawWheel();
+    }
+
+    // Événements
+    spinBtn.addEventListener('click', spin);
+    updateBtn.addEventListener('click', updateNamesFromInput);
+    shuffleBtn.addEventListener('click', shuffleNames);
+    closeModalBtn.addEventListener('click', () => modalBackdrop.classList.remove('open'));
+
+    init();
+  </script>
+
+</body></html>
